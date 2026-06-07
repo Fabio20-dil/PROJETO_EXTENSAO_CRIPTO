@@ -70,12 +70,43 @@ def decifrar_bloco(bloco_cifrado32bits,subchaves):
 
     return bloco_32bits
 
-    
+
+# CRIAR UM PADDING QUE IRÁ PREENCHER OS BYTES NECESSÁRIOS PARA A CRIAÇÃO DOS BLOCOS DE 32 BITS, 
+def tratar_padding(dados_texto):
+    #IDENTIFICANDO SE A ENTRADA É MULTIPLO DE 4(32 BITS), E CASO NÃO, IDENTIFICANDO QUANTO FALTA
+
+    tam_bloco = 4
+    sobra = len(dados_texto) % tam_bloco
+    quantos_faltam = tam_bloco if sobra == 0 else tam_bloco - sobra
+
+    #PREENCHENDO OS BYTES RESTANTES
+    txt = chr(quantos_faltam) 
+    padding = txt * quantos_faltam
+    texto_final = dados_texto + padding
+
+    return texto_final
+   
+def remover_padding(texto_decifrado):
+    quantidade_padding = ord(texto_decifrado[-1])
+    texto_limpo = texto_decifrado[:-quantidade_padding]
+    return texto_limpo
+
+
 
 
 if __name__ == "__main__":
     print("--- Sistema de criptografia INN Seguro ativo ---")
     expandir_chave("CASA")
+
+
+
+   
+
+
+
+
+
+
 
 
 
