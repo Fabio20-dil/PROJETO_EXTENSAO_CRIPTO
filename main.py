@@ -33,9 +33,9 @@ def cifrar_bloco(bloco_32bits,subchaves):
     sk1,sk2,sk3 = subchaves
 
     #RODADA 1
-    bloco_32bits = bloco_32bits ^ sk1
-    casas = sk1 % 32
-    bloco_32bits = ((bloco_32bits << casas) | (bloco_32bits >> (32-casas))) & 0xFFFFFFFF
+    bloco_32bits = bloco_32bits ^ sk1 #APLICANDO XOR NA CHAVE 
+    casas = sk1 % 32 # CALCULA O NUMERO DE CASAS QUE SERÃO MOVIDAS
+    bloco_32bits = ((bloco_32bits << casas) | (bloco_32bits >> (32-casas))) & 0xFFFFFFFF #REALIZA A ROTAÇÃO
 
     #RODADA 2
     bloco_32bits = bloco_32bits ^ sk2
@@ -48,6 +48,29 @@ def cifrar_bloco(bloco_32bits,subchaves):
     bloco_32bits = ((bloco_32bits << casas) | (bloco_32bits >> (32-casas))) & 0xFFFFFFFF
 
     return bloco_32bits
+
+def decifrar_bloco(bloco_cifrado32bits,subchaves):
+    sk1,sk2,sk3 = subchaves
+    bloco_32bits = bloco_cifrado32bits
+    
+    #RODADA 3
+    casas = sk3 % 32 # CALCULA AS CHAVES
+    bloco_32bits = ((bloco_32bits >> casas) | (bloco_32bits << (32-casas))) & 0xFFFFFFFF #DESFAZ A ROTAÇÃO
+    bloco_32bits = bloco_32bits ^sk3 # DESFAZ O XOR
+
+    #RODADA 2
+    casas = sk2 % 32
+    bloco_32bits = ((bloco_32bits >> casas) | (bloco_32bits << (32-casas))) & 0xFFFFFFFF
+    bloco_32bits = bloco_32bits ^sk2
+
+    #RODADA 1
+    casas = sk1 % 32
+    bloco_32bits = ((bloco_32bits >> casas) | (bloco_32bits << (32-casas))) & 0xFFFFFFFF
+    bloco_32bits = bloco_32bits ^sk1 
+
+    return bloco_32bits
+
+    
 
 
 if __name__ == "__main__":
